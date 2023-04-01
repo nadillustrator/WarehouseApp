@@ -11,8 +11,8 @@ public class Socks {
     private Long id;
     private String color;
     @Column(name = "cotton_part")
-    private byte cottonPart;
-    private Long quantity;
+    private int cottonPart;
+    private int quantity;
 
 
 }
