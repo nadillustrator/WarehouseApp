@@ -30,6 +30,10 @@ public class SocksController {
 
     @Operation(summary = "Adds new socks to the DB or fixes the income of existing ones at the warehouse, " +
             "increasing the quantity.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Added socks",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Socks.class))}),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -54,6 +58,10 @@ public class SocksController {
     }
 
     @Operation(summary = "Fixes the outcome of socks from the warehouse, reducing their quantity in the DB.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Socks that are released from warehouse",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Socks.class))}),
             responses = {
                     @ApiResponse(
                     responseCode = "200",
