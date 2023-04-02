@@ -22,21 +22,15 @@ public class SocksService {
     }
 
     /**
-     * Search for socks in the DB by id
-     *
-     * @param id
-     * @return Socks
-     */
-    public Socks findById(Long id) {
-        return socksRepository.findById(id).orElse(null);
-    }
-
-    /**
      * Adding socks to the DB.
      * <br>If the cottonPart is less than 0 or more than100% or the quantity is less than 0,
      * the method returns null.
      * <br>If socks with this id are found in the DB, then the method increases their quantity.
      * If there are no socks with this id in the DB,  then the method will add a new row.
+     * <br>
+     * If the user made a mistake and passed an object that does not have the same id,
+     * color and content of the cotton with the DB object,
+     * then the request will not be executed and null will be returned.
      * <br>
      * {@link JpaRepository#save(Object)}
      * {@link JpaRepository#findById(Object)}
@@ -97,7 +91,37 @@ public class SocksService {
     }
 
     /**
+     * Search for socks in the DB by id
+     *
+     * @param id
+     * @return Socks
+     */
+    public Socks findById(Long id) {
+        return socksRepository.findById(id).orElse(null);
+    }
+
+    /**
      * Returns the total number of socks in DB that match the query criteria passed in the parameters.
+     * <br>Depending on the user-specified operation parameter, different repository methods are invoked.
+     * <p>
+     * {@link SocksService#findByColorAndCottonPart(String, String, int)}
+
+     *
+     * @param color
+     * @param operation  (String "moreThan",  "lessThan" or "equal")
+     * @param cottonPart
+     * @return Integer
+     */
+    public Integer findQuantityOfSocksByColorAndCottonPart(String color, String operation, int cottonPart) {
+        List<Socks> socksList = findByColorAndCottonPart(color, operation, cottonPart);
+        if(socksList == null || socksList.size()==0){
+            return null;
+        }
+        return socksList.stream().mapToInt(Socks::getQuantity).sum();
+    }
+
+    /**
+     * Returns the collection of socks in DB that match the query criteria passed in the parameters.
      * <br>Depending on the user-specified operation parameter, different repository methods are invoked.
      * <p>
      * {@link SocksRepository#findSocksByColorAndCottonPartGreaterThan(String, int)} 
