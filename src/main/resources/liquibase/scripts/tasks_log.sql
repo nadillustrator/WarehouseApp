@@ -12,3 +12,8 @@ CREATE TABLE socks
 -- changeSet nadillustrator:2
 ALTER TABLE socks ALTER COLUMN quantity TYPE BIGINT;
 ALTER TABLE socks ALTER COLUMN quantity SET NOT NULL;
+
+
+
+
+

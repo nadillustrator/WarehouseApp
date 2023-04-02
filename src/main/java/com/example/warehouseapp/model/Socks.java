@@ -3,6 +3,8 @@ package com.example.warehouseapp.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Objects;
+
 @Entity
 @Data
 public class Socks {

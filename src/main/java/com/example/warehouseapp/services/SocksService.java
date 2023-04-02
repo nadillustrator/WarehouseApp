@@ -1,6 +1,7 @@
 package com.example.warehouseapp.services;
 
 import com.example.warehouseapp.exceptions.InvalidCottonPartException;
+import com.example.warehouseapp.exceptions.InvalidRequestException;
 import com.example.warehouseapp.exceptions.NotFoundException;
 import com.example.warehouseapp.exceptions.QuantityIsNotEnoughException;
 import com.example.warehouseapp.model.Socks;
@@ -30,6 +31,15 @@ public class SocksService {
         if ( cottonPart > 100 || cottonPart < 0) {
             throw new InvalidCottonPartException();
         }
+        Socks socksDB = socksRepository.findById(socks.getId()).orElse(null);
+        if(socksDB == null) {
+            return socksRepository.save(socks);
+        }
+        if(!socks.getColor().equals(socksDB.getColor()) || cottonPart != socksDB.getCottonPart()) {
+            throw new InvalidRequestException();
+        }
+        int sum = socks.getQuantity() + socksDB.getQuantity();
+        socks.setQuantity(sum);
         return socksRepository.save(socks);
     }
 
@@ -47,9 +57,7 @@ public class SocksService {
         System.out.println(balance);
         socksAvailability.setQuantity(balance);
         if (balance == 0) {
-            Socks returnSocks = socksRepository.save(socksAvailability);
-            socksRepository.delete(socksAvailability);
-            return returnSocks;
+            return socksRepository.save(socksAvailability);
         } else if (balance < 0) {
             throw new QuantityIsNotEnoughException();
         }
