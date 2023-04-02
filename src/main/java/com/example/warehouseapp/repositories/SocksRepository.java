@@ -12,12 +12,9 @@ import java.util.Optional;
 @Repository
 public interface SocksRepository extends JpaRepository<Socks, Long>{
 
-    Optional<Socks> findById(Long id);
-
-//    List<Socks> findSocksByColorAndCottonPartMoreThan(String color, byte cottonPart);
-//    List<Socks> findSocksByColorAndCottonPartLessThan(String color, byte cottonPart);
-//
-//    List<Socks> findSocksByColorAndCottonPart(String color, byte cottonPart);
+    List<Socks> findSocksByColorAndCottonPartGreaterThan(String color, int cottonPart);
+    List<Socks> findSocksByColorAndCottonPartLessThan(String color, int cottonPart);
+    List<Socks> findSocksByColorAndCottonPart(String color, int cottonPart);
 
 
 }

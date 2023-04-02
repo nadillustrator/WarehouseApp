@@ -23,12 +23,20 @@ public class SocksController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Socks> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(socksService.findById(id));
+        Socks socks = socksService.findById(id);
+        if (socks == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(socks);
     }
 
     @PostMapping("/income")
     public ResponseEntity<Socks> addSocks(@RequestBody Socks socks) {
-        return ResponseEntity.ok(socksService.addSocks(socks));
+        Socks addedSocks = socksService.addSocks(socks);
+        if (addedSocks == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(addedSocks);
     }
 
     @PutMapping("/outcome")
@@ -38,5 +46,16 @@ public class SocksController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(editedSocks);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Socks>> findByColorAndCottonPart(@RequestParam String color,
+                                                          @RequestParam String operation,
+                                                          @RequestParam int cottonPart) {
+        List<Socks> socksList = socksService.findByColorAndCottonPart(color, operation, cottonPart);
+        if (socksList == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(socksList);
     }
 }
