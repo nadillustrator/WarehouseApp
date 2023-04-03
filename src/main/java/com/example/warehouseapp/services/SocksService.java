@@ -1,13 +1,18 @@
 package com.example.warehouseapp.services;
 
 
+import com.example.warehouseapp.model.Income;
+import com.example.warehouseapp.model.Outcome;
 import com.example.warehouseapp.model.Socks;
+import com.example.warehouseapp.repositories.IncomeRepository;
+import com.example.warehouseapp.repositories.OutcomeRepository;
 import com.example.warehouseapp.repositories.SocksRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +21,15 @@ import java.util.Optional;
 public class SocksService {
 
     private final SocksRepository socksRepository;
+    private final IncomeRepository incomeRepository;
+    private final OutcomeRepository outcomeRepository;
 
-    public SocksService(SocksRepository socksRepository) {
+    public SocksService(SocksRepository socksRepository,
+                        IncomeRepository incomeRepository,
+                        OutcomeRepository outcomeRepository) {
         this.socksRepository = socksRepository;
+        this.incomeRepository = incomeRepository;
+        this.outcomeRepository = outcomeRepository;
     }
 
     /**
@@ -48,13 +59,16 @@ public class SocksService {
         }
         Socks socksDB = socksRepository.findById(socks.getId()).orElse(null);
         if (socksDB == null) {
-            return socksRepository.save(socks);
+            Socks newSocks = socksRepository.save(socks);
+            saveIncome(newSocks);
+            return newSocks;
         }
         if (!socks.getColor().equals(socksDB.getColor()) || cottonPart != socksDB.getCottonPart()) {
             return null;
         }
         int sum = socks.getQuantity() + socksDB.getQuantity();
         socks.setQuantity(sum);
+        saveIncome(socks);
         return socksRepository.save(socks);
     }
 
@@ -82,11 +96,10 @@ public class SocksService {
         int quantity = socksAvailability.getQuantity();
         int balance = quantity - outcome;
         socksAvailability.setQuantity(balance);
-        if (balance == 0) {
-            return socksRepository.save(socksAvailability);
-        } else if (balance < 0) {
+        if (balance < 0) {
             return null;
         }
+        saveOutcome(socksAvailability);
         return socksRepository.save(socksAvailability);
     }
 
@@ -142,4 +155,27 @@ public class SocksService {
         };
     }
 
+    /**
+     * Records the income of socks in stock in DB income
+     *
+     * @param socks
+     */
+    private void saveIncome(Socks socks) {
+        Income income = new Income();
+        income.setDateIncome(LocalDateTime.now());
+        income.setSocksId(socks);
+        incomeRepository.save(income);
+    }
+
+    /**
+     * Records the outcome of socks in stock in DB outcome
+     *
+     * @param socks
+     */
+    private void saveOutcome(Socks socks) {
+        Outcome outcome = new Outcome();
+        outcome.setDateOutcome(LocalDateTime.now());
+        outcome.setSocksId(socks);
+        outcomeRepository.save(outcome);
+    }
 }
