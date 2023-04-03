@@ -1,5 +1,5 @@
 This educational test REST application is used to automate the accounting of socks in the warehouse of the store. The storekeeper has the ability to:
-- take into account the arrival and release of socks;
+- take into account the incomes and outcomes of socks;
 - find out the total number of socks, as well as get the corresponding list of socks of a certain color and composition at a given time.
 For more information about how methods work, see javadoc and API doc(Swagger).
 
