@@ -1,6 +1,5 @@
 package com.example.warehouseapp.services;
 
-
 import com.example.warehouseapp.model.Income;
 import com.example.warehouseapp.model.Outcome;
 import com.example.warehouseapp.model.Socks;
@@ -8,14 +7,9 @@ import com.example.warehouseapp.repositories.IncomeRepository;
 import com.example.warehouseapp.repositories.OutcomeRepository;
 import com.example.warehouseapp.repositories.SocksRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SocksService {
